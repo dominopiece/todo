@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { DefaultValue } from "recoil";
 
 // function ToDoList() {
 //   const [toDo, setToDo] = useState("");
@@ -34,14 +35,33 @@ import { useForm } from "react-hook-form";
 //   );
 // }
 
+interface IForm {
+  // required가 없는 경우 ? ex) email?: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  userName: string;
+  password: string;
+  password1: string;
+}
+
 function ToDoList() {
-  const { register, watch, handleSubmit, formState } = useForm();
+  const {
+    register,
+    watch,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IForm>({
+    defaultValues: {
+      email: "@gmail.com",
+    },
+  });
   // console.log(register("toDo"));
   const onDataValid = (data: any) => {
-    console.log(data);
+    // console.log(data);
   };
   // console.log(watch());
-  console.log(formState.errors);
+  console.log(errors);
   return (
     <>
       <div>
@@ -51,32 +71,55 @@ function ToDoList() {
           onSubmit={handleSubmit(onDataValid)}
         >
           <input
-            {...register("email", { required: true })}
+            style={{ borderColor: errors?.email?.message ? "red" : "" }}
+            {...register("email", {
+              required: true,
+              pattern: {
+                value:
+                  // /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/,
+                  /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/,
+                message: "Only gmail emails allowed",
+              },
+            })}
             placeholder="Eamil"
           />
+          <span>{errors?.email?.message as string}</span>
           <input
-            {...register("firstName", { required: "test", minLength: 2 })}
+            {...register("firstName", { required: "error", minLength: 2 })}
             placeholder="First Name"
           />
+          <span>{errors?.firstName?.message as string}</span>
           <input
-            {...register("lastName", { required: true })}
+            {...register("lastName", { required: "error" })}
             placeholder="Last Name"
           />
+          <span>{errors?.lastName?.message as string}</span>
           <input
-            {...register("userName", { required: true, minLength: 1 })}
+            {...register("userName", { required: "error", minLength: 1 })}
             placeholder="User Name"
           />
+          <span>{errors?.userName?.message as string}</span>
           <input
-            {...register("password", { required: true, minLength: 1 })}
+            {...register("password", {
+              required: "slkjfskldfjdk",
+              minLength: 4,
+            })}
             placeholder="Password"
           />
+          <span>{errors?.password?.message as string}</span>
           <input
-            {...register("passwrod1", {
-              required: "sdfsdfsjlfjslk",
-              minLength: { value: 5, message: "tessldjfldskjfdsklt" },
+            style={{ borderColor: errors?.email?.message ? "red" : "" }}
+            {...register("password1", {
+              // required: "aaasdfsdfsjlfjslk",
+              required: true,
+              minLength: {
+                value: 5,
+                message: "password1 in minLength",
+              },
             })}
             placeholder="Password1"
           />
+          <span>{errors?.password1?.message as string}</span>
           <button>Add</button>
         </form>
       </div>
