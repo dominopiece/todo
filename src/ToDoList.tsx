@@ -43,6 +43,8 @@ interface IForm {
   userName: string;
   password: string;
   password1: string;
+  // 필수가 아니기 때문에 ?
+  extraErros?: string;
 }
 
 function ToDoList() {
@@ -51,14 +53,24 @@ function ToDoList() {
     watch,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<IForm>({
     defaultValues: {
       email: "@gmail.com",
     },
   });
   // console.log(register("toDo"));
-  const onDataValid = (data: any) => {
+  const onDataValid = (data: IForm) => {
     // console.log(data);
+    if (data.password !== data.password1) {
+      setError(
+        "password1",
+        { message: "Password are not same" },
+        { shouldFocus: true }
+      );
+    }
+    // // 전체 폼
+    // setError("extraErros", {message: "Server Offline or Errrrorrrrr"})
   };
   // console.log(watch());
   console.log(errors);
@@ -85,7 +97,16 @@ function ToDoList() {
           />
           <span>{errors?.email?.message as string}</span>
           <input
-            {...register("firstName", { required: "error", minLength: 2 })}
+            {...register("firstName", {
+              required: "error",
+              minLength: 2,
+              validate: {
+                noTom: (value) =>
+                  // 앞이든 뒤든 중간이든 포함되면 에러
+                  value.includes("tom") ? "no tom allowed" : true,
+                  noMin: value => value.includes("min") ? "no min allowed" : true,
+              },
+            })}
             placeholder="First Name"
           />
           <span>{errors?.firstName?.message as string}</span>
@@ -121,6 +142,7 @@ function ToDoList() {
           />
           <span>{errors?.password1?.message as string}</span>
           <button>Add</button>
+          <span>{errors?.extraErros?.message}</span>
         </form>
       </div>
     </>
