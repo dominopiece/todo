@@ -4,7 +4,7 @@ export interface IToDo {
   id: number;
   text: string;
   // 선택지 제한
-  status: "To_DO" | "DOING" | "DONE";
+  status: "To_Do" | "DOING" | "DONE";
 }
 
 export const toDoState = atom<IToDo[]>({
