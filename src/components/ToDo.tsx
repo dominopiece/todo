@@ -20,6 +20,18 @@ function ToDo({ text, status, id }: IToDo) {
     const {
       currentTarget: { name },
     } = e;
+    setToDos((oldToDos) => {
+      const targetindex = oldToDos.findIndex((toDo) => toDo.id === id);
+      console.log(targetindex);
+      const oldToDo = oldToDos[targetindex];
+      const newToDo = { text, id, status: name as any }; 
+      console.log(oldToDo, newToDo);
+      return [
+        ...oldToDos.slice(0, targetindex),
+        newToDo,
+        ...oldToDos.slice(targetindex + 1),
+      ];
+    });
   };
   return (
     <li>
