@@ -40,7 +40,8 @@ import {
 //     </>
 //   );
 
-const toDoState = atom<IToDo[]> ({
+const toDoState = atom<IToDo[]>({
+  // unique keyk
   key: "toDo",
   default: [],
 });
@@ -50,17 +51,23 @@ interface IForm {
 }
 
 interface IToDo {
+  id: number;
   text: string;
-  category: "To_DO" | "DOING" | "DONE";
+  // 선택지 제한
+  status: "To_DO" | "DOING" | "DONE";
 }
 
 function ToDoList() {
   const [toDos, setToDos] = useRecoilState(toDoState);
   const { register, handleSubmit, setValue } = useForm<IForm>();
-  const handleValid = (data: IForm) => {
-    console.log("add to do", data.toDo);
+  const handleValid = ({ toDo }: IForm) => {
+    setToDos((oldToDos) => [
+      { id: Date.now(), text: toDo, status: "To_DO" },
+      ...oldToDos,
+    ]);
     setValue("toDo", "");
   };
+  // console.log(toDos);
   return (
     <>
       <h1>To Dos</h1>
@@ -74,7 +81,11 @@ function ToDoList() {
         />
         <button>Add</button>
       </form>
-      <ul></ul>
+      <ul>
+        {toDos.map((toDo) => (
+          <li key={toDo.id}>{toDo.text}</li>
+        ))}
+      </ul>
     </>
   );
 }
