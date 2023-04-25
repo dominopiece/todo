@@ -21,15 +21,16 @@ function ToDo({ text, status, id }: IToDo) {
       currentTarget: { name },
     } = e;
     setToDos((oldToDos) => {
-      const targetindex = oldToDos.findIndex((toDo) => toDo.id === id);
-      console.log(targetindex);
-      const oldToDo = oldToDos[targetindex];
-      const newToDo = { text, id, status: name as any }; 
+      const targetIndex = oldToDos.findIndex((toDo) => toDo.id === id);
+      console.log(targetIndex);
+      const oldToDo = oldToDos[targetIndex];
+      // const newToDo = { text, id, status: name as any }; 
+      const newToDo = { text, id, status: name as IToDo["status"]}; 
       console.log(oldToDo, newToDo);
       return [
-        ...oldToDos.slice(0, targetindex),
+        ...oldToDos.slice(0, targetIndex),
         newToDo,
-        ...oldToDos.slice(targetindex + 1),
+        ...oldToDos.slice(targetIndex + 1),
       ];
     });
   };
@@ -37,7 +38,7 @@ function ToDo({ text, status, id }: IToDo) {
     <li>
       <span>{text}</span>
       {/* {status !== "To_Do" && <Button onClick={() => onClick("To_Do")}>To Do</Button>}
-      {status !== "DOING" && <Button onClick={() => onClick("DOING")}>Doing</Button>}
+      {status !== "DOING" && <Button onClick={() => onClick(" DOING")}>Doing</Button>}
       {status !== "DONE" && <Button onClick={() => onClick("DONE")}>Done</Button>} */}
       {status !== "To_Do" && (
         <Button name="To_Do" onClick={onNewClick}>

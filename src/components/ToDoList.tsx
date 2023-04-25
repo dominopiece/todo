@@ -1,7 +1,8 @@
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import CreateToDo from "./CreateToDo";
-import { toDoState } from "./atom";
+import { statusState, testSelector, toDoSelector, toDoState } from "./atom";
 import ToDo from "./ToDo";
+import styled from "styled-components";
 
 // function ToDoList() {
 //   const [toDo, setToDo] = useState("");
@@ -36,19 +37,41 @@ import ToDo from "./ToDo";
 //   );
 
 function ToDoList() {
-  const toDos = useRecoilValue(toDoState);
-  console.log(toDos)
+  // const toDos = useRecoilValue(toDoState);
+  // console.log(toDos)
+  // const selectorOutput = useRecoilValue(toDoSelector);
+  // console.log(selectorOutput); 
+  // const [toDo, doing, done] = useRecoilValue(toDoSelector);
+  const [toDos] = useRecoilValue(toDoSelector);
+  const [status, setStatus] = useRecoilState(statusState);
+  const onInput = (event: React.FormEvent<HTMLSelectElement>) => {
+    setStatus(event.currentTarget.value as any);
+  };
+  // console.log(status);
+
+  const outputSlectorTest = useRecoilValue(testSelector)
+  console.log(outputSlectorTest)
   return (
     <>
       <h1>To Dos</h1>
       <hr />
+      <select value={status} onInput={onInput}>
+      {/* <select> */}
+        <option value="To_Do">To Do</option>
+        <option value="DOING">Doing</option>
+        <option value="DONE">Done</option>
+      </select>
       <CreateToDo />
-      <ul>
-        {toDos.map((toDo) => (
-          // <ToDo text={toDo.text} status={toDo.status} id={toDo.id} />
-          <ToDo key={toDo.id} {...toDo} />
+      <hr />
+      {/* {status === "To_Do" &&
+        toDo.map((aToDo) => <ToDo key={aToDo.id} {...aToDo} />)}
+      {status === "DOING" &&
+        doing.map((aToDo) => <ToDo key={aToDo.id} {...aToDo} />)}
+      {status === "DONE" &&
+        done.map((aToDo) => <ToDo key={aToDo.id} {...aToDo} />)} */}
+        {toDos?.map(aToDo => (
+          <ToDo key={aToDo.id}{...aToDo} />
         ))}
-      </ul>
     </>
   );
 }
